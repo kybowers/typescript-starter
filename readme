@@ -1,0 +1,6 @@
+Things To Do Before Checking In:
+
+- HTTPS for production builds
+- Nodemon or something similar
+- Maybe split the token for issuer/refresh
+- Maybe add passport for checking auths
