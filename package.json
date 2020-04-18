@@ -1,7 +1,7 @@
 {
     "name": "typescript-starter",
     "version": "1.0.0",
-    "description": "Starter application for session based express apps in typescript",
+    "description": "Starter application for token based express apps in typescript",
     "main": "src/server.js",
     "author": "Kyle Bowers",
     "license": "MIT",
