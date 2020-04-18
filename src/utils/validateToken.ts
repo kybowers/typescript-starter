@@ -23,4 +23,4 @@ const validateToken = (
     }
 };
 
-module.exports = validateToken;
+export default validateToken;

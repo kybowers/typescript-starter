@@ -2,10 +2,13 @@
 
 import dotenv from 'dotenv';
 import express from 'express';
-import * as userController from './controllers/user';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import mongoose from 'mongoose';
+import helmet from 'helmet';
+import * as userController from './controllers/user';
+import validateToken from './utils/validateToken';
+
 dotenv.config({ path: '.env' });
 
 const app = express();
@@ -33,11 +36,12 @@ db.once('open', function () {
 });
 
 app.use(compression());
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/login', userController.postLogin);
 app.post('/users', userController.postSignup);
-app.get('/users/self', userController.getOwnUser);
+app.get('/users/self', validateToken, userController.getOwnUser);
 
 export default app;
