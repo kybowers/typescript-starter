@@ -5,12 +5,11 @@ While working on another project, I needed a server that could support some toke
 ## Features
 
 - Uses Mongodb (with mongoose)
-- JWT authentication (jsonwebtoken)
+- JWT authentication (jsonwebtoken), partially implement refresh logic
 - Bcrpyt for password hashing (bcryptjs)
 
-## Things To Do Before Ready
+## Things I Might Add Later
 
 - HTTPS for production builds
-- Nodemon or something similar for hot reloading
-- Maybe split the token into refresh/access
+- Logout
 - Maybe add passport to check auths

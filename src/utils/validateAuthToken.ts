@@ -1,7 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-const validateToken = (
+/**
+ * Middleware for verifying a valid auth token in request header
+ * @param request 
+ * @param response 
+ * @param next 
+ */
+const validateAuthToken = (
     request: Request,
     response: Response,
     next: NextFunction
@@ -23,4 +29,4 @@ const validateToken = (
     }
 };
 
-export default validateToken;
+export default validateAuthToken;

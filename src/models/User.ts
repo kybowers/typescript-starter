@@ -32,15 +32,20 @@ userSchema.pre('save', function save(next) {
     if (!user.isModified('password')) {
         return next();
     }
-    user.password = Bcrypt.hashSync(user.password, 10);
-    next();
+    Bcrypt.genSalt(10, (err, salt) => {
+        Bcrypt.hash(user.password, salt, (err, hash) => {
+            next();
+        });
+    });
 });
 
 const comparePassword: comparePasswordFunction = function (
     candidatePassword,
     cb
 ) {
-    cb(null, Bcrypt.compareSync(candidatePassword, this.password));
+    Bcrypt.compare(candidatePassword, this.password, (error, isMatch) =>
+        cb(error, isMatch)
+    );
 };
 
 userSchema.methods.comparePassword = comparePassword;

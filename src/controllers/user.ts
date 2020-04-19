@@ -1,14 +1,55 @@
 import { Request, Response, NextFunction } from 'express';
 import { User, UserDocument, AuthToken } from '../models/User';
 import Bcrypt from 'bcryptjs';
-import createToken from '../utils/createToken';
+import jwt from 'jsonwebtoken';
+
+const tokenOptions = {
+    expiresIn: process.env.JWT_EXPIRES,
+    issuer: process.env.JWT_ISSUER,
+};
+const refreshTokenOptions = {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES,
+    issuer: process.env.JWT_ISSUER,
+};
+
+const signAccessAndRefreshToken = (
+    payload: any,
+    request: Request,
+    response: Response
+) =>
+    jwt.sign(payload, process.env.JWT_SECRET, tokenOptions, (error, token) => {
+        if (error) {
+            response.sendStatus(500);
+        } else {
+            jwt.sign(
+                payload,
+                process.env.JWT_REFRESH_SECRET,
+                refreshTokenOptions,
+                (error, refreshToken) => {
+                    if (error) {
+                        response.sendStatus(500);
+                    } else {
+                        response.status(200).send({
+                            status: 'Logged in',
+                            token: token,
+                            refreshToken: refreshToken,
+                        });
+                    }
+                }
+            );
+        }
+    });
 
 export const postLogin = (request: Request, response: Response) => {
     const { username, password } = request.body;
     User.findOne({ username: username }, (error, user) => {
         if (user) {
             if (Bcrypt.compareSync(password, user.password)) {
-                response.status(200).send(createToken(username));
+                signAccessAndRefreshToken(
+                    { username: username },
+                    request,
+                    response
+                );
             }
         } else {
             response.sendStatus(401);
@@ -31,7 +72,7 @@ export const postSignup = (
         if (error) {
             return next(error);
         }
-        response.status(200).send(createToken(user.username));
+        signAccessAndRefreshToken({ username: username }, request, response);
     });
 };
 

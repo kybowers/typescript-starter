@@ -1,15 +1,16 @@
 'use strict';
 
 import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+
 import express from 'express';
 import bodyParser from 'body-parser';
 import compression from 'compression';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import * as userController from './controllers/user';
-import validateToken from './utils/validateToken';
+import validateToken from './utils/validateAuthToken';
 
-dotenv.config({ path: '.env' });
 
 const app = express();
 mongoose
